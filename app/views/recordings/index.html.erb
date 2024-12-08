@@ -1,0 +1,5 @@
+<h1>Recordings</h1>
+
+<% @recordings.each do |recording| %>
+  <p><%= link_to recording.key, record_slug_url(recording.key) %></p>
+<% end %>
