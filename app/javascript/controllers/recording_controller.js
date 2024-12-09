@@ -2,6 +2,8 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="recording"
 export default class extends Controller {
+  static targets = ["video"]
+
   connect() {
     this.stream = null
     this.recorder = null
@@ -51,11 +53,26 @@ export default class extends Controller {
 
   async startRecording(stream, chunks) {
     const recorder = new MediaRecorder(stream)
-    recorder.ondataavailable = (e) => {
+
+    recorder.ondataavailable = async (e) => {
       chunks.push(e.data)
+      if (e.data.size > 0) {
+        const formData = new FormData()
+        formData.append("chunk", e.data)
+
+        const token = document.getElementsByName("csrf-token")[0].content
+
+        await fetch("/recordings/stream", {
+          method: "POST",
+          headers: {
+            "X-CSRF-Token": token
+          },
+          body: formData
+        })
+      }
     }
     
-    recorder.start()
+    recorder.start(1000)
     return recorder
   }
 

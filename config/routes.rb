@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :recordings, except: :show
 
   get "/r/:key", to: "recordings#show", as: :slugged_recording
+  post "/recordings/stream", to: "recordings#stream"
 
   direct :record_slug do |recording, options|
     route_for :slugged_recording, recording, options

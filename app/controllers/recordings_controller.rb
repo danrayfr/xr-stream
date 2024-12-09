@@ -1,4 +1,6 @@
 class RecordingsController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: :stream
+
   def index
     @recordings = Recording.all
   end
@@ -19,6 +21,16 @@ class RecordingsController < ApplicationController
     else
       render json: @recording.errors.full_messages.to_sentence
     end
+  end
+
+  def stream
+    chunk = params[:chunk]
+
+    File.open("tmp/stream.webm", "ab") do |f|
+      f.write(chunk.read)
+    end
+
+    head :ok
   end
 
   private
