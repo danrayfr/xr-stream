@@ -38,6 +38,20 @@ class RecordingsController < ApplicationController
     head :ok
   end
 
+  def clean
+    file = Rails.root.join("tmp", "stream.web")
+    Rails.logger.info("Looking for file: #{file}")
+
+    if File.exist?(file)
+      File.delete(file)
+      Rails.logger.info("File deleted successfully: #{file}")
+      render json: { message: "Temp file is deleted successfully" }, status: :ok
+    else
+      Rails.logger.warn("File not found: #{file}")
+      render json: { message: "No file found" }, status: :not_found
+    end
+  end
+
   private
     def recording_params
       params.require(:recording).permit(:file)

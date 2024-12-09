@@ -64,3 +64,5 @@ end
 
 gem 'dotenv-rails', groups: [:development, :test]
 gem "google-cloud-video-live_stream"
+gem "streamio-ffmpeg"
+

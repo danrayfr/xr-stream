@@ -23,6 +23,21 @@ export default class extends Controller {
       this.stopCapture(this.stream)
       console.log(this.chunks)
       this.stopRecording(this.recorder)
+
+      const token = document.getElementsByName("csrf-token")[0].content
+      await fetch("/recordings/cleanup", {
+        method: "POST",
+        headers: {
+          "X-CSRF-Token": token,
+          "Content-Type": "application/json",
+        }
+      }).then(response => {
+        if (response.ok) {
+          console.log("File is deleted successfully")
+        } else {
+          console.error("Failed to delete the file");
+        }
+      })
     } else {
       console.log("No active stream", this.stream)
     }

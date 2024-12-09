@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   get "/r/:key", to: "recordings#show", as: :slugged_recording
   post "/recordings/stream", to: "recordings#stream"
+  post "/recordings/cleanup", to: "recordings#clean"
 
   direct :record_slug do |recording, options|
     route_for :slugged_recording, recording, options
