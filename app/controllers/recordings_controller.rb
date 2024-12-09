@@ -25,10 +25,15 @@ class RecordingsController < ApplicationController
 
   def stream
     chunk = params[:chunk]
+    file = "tmp/stream.web"
 
-    File.open("tmp/stream.webm", "ab") do |f|
+    File.open(file, "ab") do |f|
       f.write(chunk.read)
     end
+
+    twitch_stream_key = ENV["TWITCH_STREAM_KEY"]
+
+    StreamToJob.perform_later(file, twitch_stream_key)
 
     head :ok
   end
